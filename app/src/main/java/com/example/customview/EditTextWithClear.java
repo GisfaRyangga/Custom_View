@@ -19,7 +19,6 @@ public class EditTextWithClear extends AppCompatEditText {
     Drawable mClearButtonImage;
 
     private void init() {
-//      menggambil drawable transparan untuk diinit disemua constructor
         mClearButtonImage = ResourcesCompat.getDrawable(
                 getResources(), R.drawable.ic_clear_opaque_24dp, null);
 
@@ -31,7 +30,7 @@ public class EditTextWithClear extends AppCompatEditText {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//          untuk ketika teks sudah terisi maka button baru muncul
+//          saat teks terisi maka button muncul
                 showClearButton();
             }
 
@@ -42,44 +41,44 @@ public class EditTextWithClear extends AppCompatEditText {
         });
 
         setOnTouchListener(new OnTouchListener() {
-//          mendeteksi koordinat xnya dimana, jadi ketika ditouch akan mendeteksi koordinatnya
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(getCompoundDrawablesRelative()[2] != null){
-//                jika clear buttonnya ada:
-//                hitungan untuk mennghitung lebar total-padding-lebar dari button
-//                untuk mendapat koordinat panjang
-                    float clearButtonStartPosititon =
-                            (getWidth()- getPaddingEnd()-
-                                    mClearButtonImage.getIntrinsicWidth());
+                if(getCompoundDrawables()[2] != null){
+                    float clearButtonStartPosition = (getWidth()-getPaddingEnd()-
+                            mClearButtonImage.getIntrinsicWidth());
                     boolean isClearButtonClicked = false;
 
-//                  untuk mendeteksi touch
-                    if (motionEvent.getX() > clearButtonStartPosititon){
-                        isClearButtonClicked = true;
+//                  if (motionEvent.getX() > clearButtonStart){
+//                      isClearButtonClicked = true;
+//                  }
+
+//                  TUGAS Custom View RTL
+                    if (getLayoutDirection() == LAYOUT_DIRECTION_RTL) {
+                        if (motionEvent.getX() < clearButtonStartPosition) {
+                            isClearButtonClicked = true;
+                        }
+                    }
+                    else {
+                        if (motionEvent.getX() > clearButtonStartPosition) {
+                            isClearButtonClicked = true;
+                        }
                     }
 
                     if (isClearButtonClicked){
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-//                          down ketika menekan
-                            mClearButtonImage = ResourcesCompat.getDrawable
-                                    (getResources(), R.drawable.ic_clear_black_24dp,
-                                            null);
+                            mClearButtonImage = ResourcesCompat.getDrawable(getResources(),
+                                    R.drawable.ic_clear_black_24dp, null);
                             showClearButton();
                         }
+
                         if (motionEvent.getAction() == MotionEvent.ACTION_UP){
-//                          up itu ketika melepas
-                            mClearButtonImage = ResourcesCompat.getDrawable
-                                    (getResources(), R.drawable.ic_clear_opaque_24dp,
-                                            null);
+                            mClearButtonImage = ResourcesCompat.getDrawable(getResources(),
+                                    R.drawable.ic_clear_opaque_24dp, null);
                             showClearButton();
                             getText().clear();
                             hideClearButton();
                             return true;
                         }
-                    }
-                    else {
-                        return false;
                     }
                 }
                 return false;
@@ -103,15 +102,10 @@ public class EditTextWithClear extends AppCompatEditText {
     }
 
     private void showClearButton(){
-//        menempelkan komponen dengan posisi sebelah kanan sesuai parameternya
-        setCompoundDrawablesWithIntrinsicBounds
-                (null, null, mClearButtonImage, null);
+        setCompoundDrawablesWithIntrinsicBounds(null, null, mClearButtonImage, null);
     }
 
     private void hideClearButton(){
-//        karena mau hide, maka dibuat null semua
-        setCompoundDrawablesWithIntrinsicBounds
-                (null, null, null, null);
+        setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
     }
-
 }
